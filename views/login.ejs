@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- link local css para login -->
+  <link rel="stylesheet" href="/recursos/style/login.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <header>
+    <h2>esato es un header</h2>
+  </header>
+
+
+  <!-- FONDO ANIMADO ESTILO WAVE -->
+  <div class="ocean">
+    <div class="wave"></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="login-form">
+    <h2>Login</h2>
+    <form action="/auth" method="POST">
+      <input type="text" name="usuario" id="nom_usuario" placeholder="username">
+      <input type="password" name="clave" id="password" placeholder="password">
+      <input type="submit" class="btn-login" value="Login">
+    </form>
+
+    <a href="registro">Registro</a>
+
+    <!-- ALERTA DE sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <% if(typeof alert !="undefined" ) { %>
+      <script>
+        Swal.fire({
+          title: '<%= alertTitle %>',
+          text: '<%= alertMessage %>',
+          icon: '<%= alertIcon %>',
+          showConfirmButton: '<%= showConfirmButton%>',
+          timer: ' <%=timer %>'
+        }).then(() => {
+          window.location = "/<%= ruta %>"
+        })
+      </script>
+      <% } %>
+  </div>
+</body>
+
+</html>
