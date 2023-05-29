@@ -36,36 +36,36 @@ const conexion = require("./dataBase/db");
 /* ============================================================== */
 /* ======================== LOGIN =========================== */
 /* ============================================================== */
-app.post("/registro", async (req, res) => {
-  const nombre = req.body.nombre;
-  const usuario = req.body.usuario;
-  const clave = req.body.clave;
-  let passwordHaash = await bcryptjs.hash(clave, 8);
-  conexion.query(
-    "INSERT INTO usuarios SET ?",
-    {
-      nombre: nombre,
-      usuario: usuario,
-      clave: passwordHaash,
-    },
-    async (error, results) => {
-      if (error) {
-        console.log(error);
-      } else {
-        // res.send("ALTA MAMALONA");
-        res.render("registro", {
-          alert: true,
-          alertTitle: "Registro",
-          alertMessage: "Regitro exitoso",
-          alertIcon: "success",
-          showConfirmButton: true,
-          timer: 1500,
-          ruta: "",
-        });
-      }
-    }
-  );
-});
+// app.post("/registro", async (req, res) => {
+//   const nombre = req.body.nombre;
+//   const usuario = req.body.usuario;
+//   const clave = req.body.clave;
+//   let passwordHaash = await bcryptjs.hash(clave, 8);
+//   conexion.query(
+//     "INSERT INTO usuarios SET ?",
+//     {
+//       nombre: nombre,
+//       usuario: usuario,
+//       clave: passwordHaash,
+//     },
+//     async (error, results) => {
+//       if (error) {
+//         console.log(error);
+//       } else {
+//         // res.send("ALTA MAMALONA");
+//         res.render("registro", {
+//           alert: true,
+//           alertTitle: "Registro",
+//           alertMessage: "Regitro exitoso",
+//           alertIcon: "success",
+//           showConfirmButton: true,
+//           timer: 1500,
+//           ruta: "",
+//         });
+//       }
+//     }
+//   );
+// });
 
 app.post("/auth", async (req, res) => {
   const usuario = req.body.usuario;
@@ -83,23 +83,23 @@ app.post("/auth", async (req, res) => {
           res.render("login", {
             alert: true,
             alertTitle: "Error",
-            alertMessage: "Usuarios o contraseña incorrectos",
+            alertMessage: "Usuario o contraseña incorrectos",
             alertIcon: "error",
             showConfirmButton: true,
             timer: 1500,
-            ruta: "login",
+            ruta: "/",
           });
         } else {
           req.session.loggedin = true;
           req.session.nombre = results[0].nombre;
-          res.render("login", {
+          res.render("productos", {
             alert: true,
             alertTitle: "Conectado",
             alertMessage: "Bienvenido: " + usuario,
             alertIcon: "success",
             showConfirmButton: false,
-            timer: 1500,
-            ruta: "",
+            timer: 15000,
+            ruta: "/",
           });
         }
       }
@@ -112,7 +112,7 @@ app.post("/auth", async (req, res) => {
       alertIcon: "warning",
       showConfirmButton: true,
       timer: 15000,
-      ruta: "login",
+      ruta: "/",
     });
   }
 });
@@ -122,7 +122,7 @@ app.post("/auth", async (req, res) => {
 
 /* ========== RUTAS ========== */
 // ruta de login
-app.get("/login", (req, res) => {
+app.get("/", (req, res) => {
   res.render("login");
 });
 
@@ -131,19 +131,25 @@ app.get("/registro", (req, res) => {
   res.render("registro");
 });
 
-app.get("/", (req, res) => {
-  if (req.session.loggedin) {
-    res.render("index", {
-      login: true,
-      nombre: req.session.nombre,
-    });
-  } else {
-    res.render("index", {
-      login: false,
-      name: "Debe iniciar sesión",
-    });
-  }
+// ruta para los produtos
+app.get("/productos", (req, res) => {
+  res.render("productos");
 });
+
+// ruta princial
+// app.get("/", (req, res) => {
+//   if (req.session.loggedin) {
+//     res.render("index", {
+//       login: true,
+//       nombre: req.session.nombre,
+//     });
+//   } else {
+//     res.render("index", {
+//       login: false,
+//       name: "Debe iniciar sesión",
+//     });
+//   }
+// });
 
 //logout
 app.get("/logout", (req, res) => {
