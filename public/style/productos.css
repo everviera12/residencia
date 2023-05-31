@@ -1,0 +1,4 @@
+/* margen para despegarlo de las orillas de la pantalla */
+.container-table {
+  margin: 0 20px 0 20px;
+}
