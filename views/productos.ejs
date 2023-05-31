@@ -13,45 +13,103 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <!-- LINK boxicons -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <!-- LINK fontawesome -->
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta2/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+    crossorigin="anonymous">
 
-
-  <title>Document</title>
+  <title>Tabla productos</title>
 </head>
 
 <body>
-  <!-- barra de navegacion -->
-  <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+  <!-- Barra de navegacion -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">MENU</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <!-- Icono para Home -->
+      <a class="navbar-brand" href="#">
+        <i class="fa-duotone fa-house"
+          style="--fa-primary-color: #0055ff; --fa-secondary-color: #949494; --fa-secondary-opacity: 0.5;"></i>
+      </a>
+      <!-- Icono de la hamburguesa -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="productos">Home</a>
-          </li>
-          <!-- LOGOUT -->
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Logout</a>
-          </li>
-        </ul>
+      <!-- LISTA DE MENÚ -->
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" href="#">Features</a>
+        </div>
+      </div>
+      <!-- Logout -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/">Logout</a>
       </div>
     </div>
   </nav>
 
   <!-- Boton para agregar nuevos productos -->
   <div class="d-grid gap-2 d-md-flex mt-3 ms-4">
-    <a href="createProducto" class="btn btn-outline-primary">
+    <a href="/newProduct" class="btn btn-outline-primary">
       <i class='bx bx-add-to-queue bx-sm  bx-tada-hover'></i>
     </a>
   </div>
 
   <!-- TABLA DE PRODUCTOS -->
+  <div class="container-table">
+    <table id="tabla-productos" class="table table-bordered table-striped text-center table-hover mt-4">
+      <thead>
+        <tr class="bg-primary text-white">
+          <th scope="col" class="text-center"> Supplier</th> <!-- proveedor -->
+          <th scope="col" class="text-center"> Part number</th> <!-- num_part -->
+          <th scope="col" class="text-center"> Product name</th> <!-- nom_prod -->
+          <th scope="col" class="text-center"> Made in</th> <!-- made_in -->
+          <th scope="col" class="text-center"> Quantity</th> <!-- cantidad -->
+          <th scope="col" class="text-center"> Row material</th> <!-- row_material -->
+          <th scope="col" class="text-center"> Actions</th> <!-- acciones a hacer -->
+        </tr>
+      </thead>
+
+      <!-- CUERPO DE LA TABLA -->
+      <tbody>
+        <!-- 'productos se refiere a la tabla que se creó en la base de datos' -->
+        <% results.forEach((productos)=> { %>
+          <tr>
+            <td class="text-center">
+              <%= productos.proveedor %>
+            </td>
+            <td class="text-center">
+              <%= productos.num_part %>
+            </td>
+            <td class="text-center">
+              <%= productos.nom_prod %>
+            </td>
+            <td class="text-center">
+              <%= productos.made_in %>
+            </td>
+            <td class="text-center">
+              <%= productos.cantidad %>
+            </td>
+            <td class="text-center">
+              <%= productos.row_material %>
+            </td>
+            <!-- BOTONES DE EDITAR Y ELIMINAR -->
+            <td class="text-center">
+              <a href="/edit" class="btn btn-outline-warning"> Edit</a>
+              <a href="/delete" class="btn btn-outline-danger"> Delete</a>
+            </td>
+          </tr>
+
+          <% }) %>
+      </tbody>
+
+    </table>
+  </div>
 
 
-
+  <!-- ============================================================== -->
+  <!-- ======================== SCRIPTS ======================== -->
+  <!-- ============================================================== -->
   <!-- script boxicons -->
   <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
   <!-- script Bootstrap -->
@@ -66,6 +124,8 @@
     crossorigin="anonymous"></script>
   <!-- ALERTA DE sweetalert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- código personalizado -->
   <% if(typeof alert !="undefined" ) { %>
     <script>
       Swal.fire({
@@ -79,7 +139,6 @@
       })
     </script>
     <% } %>
-
 </body>
 
 </html>
