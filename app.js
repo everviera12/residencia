@@ -99,7 +99,7 @@ app.post("/auth", async (req, res) => {
             alertIcon: "success",
             showConfirmButton: false,
             timer: 15000,
-            ruta: "/",
+            ruta: "./views/productos.ejs",
           });
         }
       }
@@ -120,6 +120,10 @@ app.post("/auth", async (req, res) => {
 /* ======================== FIN LOGIN =========================== */
 /* ============================================================== */
 
+// Importar y utilizar las rutas de productos
+const productos = require("./routers/products/productos");
+app.use("/productos", productos);// Rutas relacionadas con productos
+
 /* ========== RUTAS ========== */
 // ruta de login
 app.get("/", (req, res) => {
@@ -136,20 +140,10 @@ app.get("/productos", (req, res) => {
   res.render("productos");
 });
 
-// ruta princial
-// app.get("/", (req, res) => {
-//   if (req.session.loggedin) {
-//     res.render("index", {
-//       login: true,
-//       nombre: req.session.nombre,
-//     });
-//   } else {
-//     res.render("index", {
-//       login: false,
-//       name: "Debe iniciar sesión",
-//     });
-//   }
-// });
+// ruta para crear productos
+app.get("/newProduct", (req, res) => {
+  res.render("newProduct");
+});
 
 //logout
 app.get("/logout", (req, res) => {
