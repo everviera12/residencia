@@ -116,13 +116,30 @@ app.post("/auth", async (req, res) => {
     });
   }
 });
+
+app.get("/productos", (req, res) => {
+  conexion.query("SELECT * FROM productos", (error, results) => {
+    if (error) {
+      console.log("EL ERROR ES " + error);
+    } else {
+      res.render("productos", { results: results });
+    }
+  });
+});
+
+
 /* ============================================================== */
 /* ======================== FIN LOGIN =========================== */
 /* ============================================================== */
 
+/* =========== RUTAS IMPORTADAS =========== */
 // Importar y utilizar las rutas de productos
-const productos = require("./routers/products/productos");
-app.use("/productos", productos);// Rutas relacionadas con productos
+// const productos = require("./routers/products/productos");
+// app.use("/productos", productos);// Rutas relacionadas con productos
+
+// metodos del crud alojados en la ruta mostrada para interactuar con el formulario
+const crud = require("./controllers/crudProductos");
+app.post("/save", crud.save);
 
 /* ========== RUTAS ========== */
 // ruta de login
