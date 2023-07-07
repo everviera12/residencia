@@ -6,6 +6,9 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config({ path: "./env/.env" });
 
+// Modulo de la base de datos
+const conexion = require("./dataBase/db");
+
 // capturamos datos de formulario y datos tipo json
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -30,43 +33,46 @@ app.use(
 app.use("/recursos", express.static("public"));
 app.use("/recursos", express.static(__dirname + "/public"));
 
-// Modulo de la base de datos
-const conexion = require("./dataBase/db");
+/* ============================================================== */
+/* ======================== REGISTRO =========================== */
+/* ============================================================== */
+app.post("/registro", async (req, res) => {
+  const nombre = req.body.nombre;
+  const usuario = req.body.usuario;
+  const clave = req.body.clave;
+  let passwordHaash = await bcryptjs.hash(clave, 8);
+  conexion.query(
+    "INSERT INTO usuarios SET ?",
+    {
+      nombre: nombre,
+      usuario: usuario,
+      clave: passwordHaash,
+    },
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+      } else {
+        // res.send("ALTA MAMALONA");
+        res.render("registro", {
+          alert: true,
+          alertTitle: "Editado",
+          alertMessage: "Edit exitoso",
+          alertIcon: "success",
+          showConfirmButton: true,
+          timer: 1500,
+          ruta: "",
+        });
+      }
+    }
+  );
+});
+/* ============================================================== */
+/* ======================== FIN REGISTRO =========================== */
+/* ============================================================== */
 
 /* ============================================================== */
 /* ======================== LOGIN =========================== */
 /* ============================================================== */
-// app.post("/registro", async (req, res) => {
-//   const nombre = req.body.nombre;
-//   const usuario = req.body.usuario;
-//   const clave = req.body.clave;
-//   let passwordHaash = await bcryptjs.hash(clave, 8);
-//   conexion.query(
-//     "INSERT INTO usuarios SET ?",
-//     {
-//       nombre: nombre,
-//       usuario: usuario,
-//       clave: passwordHaash,
-//     },
-//     async (error, results) => {
-//       if (error) {
-//         console.log(error);
-//       } else {
-//         // res.send("ALTA MAMALONA");
-//         res.render("registro", {
-//           alert: true,
-//           alertTitle: "Registro",
-//           alertMessage: "Regitro exitoso",
-//           alertIcon: "success",
-//           showConfirmButton: true,
-//           timer: 1500,
-//           ruta: "",
-//         });
-//       }
-//     }
-//   );
-// });
-
 app.post("/auth", async (req, res) => {
   const usuario = req.body.usuario;
   const clave = req.body.clave;
@@ -117,6 +123,14 @@ app.post("/auth", async (req, res) => {
   }
 });
 
+/* ============================================================== */
+/* ======================== FIN LOGIN =========================== */
+/* ============================================================== */
+
+/* ============================================================== */
+/* ======================== PRODUCTOS =========================== */
+/* ============================================================== */
+// ruta para ver los productos
 app.get("/productos", (req, res) => {
   conexion.query("SELECT * FROM productos", (error, results) => {
     if (error) {
@@ -127,19 +141,51 @@ app.get("/productos", (req, res) => {
   });
 });
 
+// ruta para crear productos
+app.get("/newProduct", (req, res) => {
+  res.render("newProduct");
+});
 
-/* ============================================================== */
-/* ======================== FIN LOGIN =========================== */
-/* ============================================================== */
+// ruta para editar productos
+app.get("/edit/:id_producto", (req, res) => {
+  const id_producto = req.params.id_producto;
+  conexion.query(
+    "SELECT * FROM productos WHERE id_producto = ?",
+    [id_producto],
+    (error, results) => {
+      if (error) {
+        console.log("EL ERROR ES " + error);
+      } else {
+        res.render("edit", { productos: results[0] });
+      }
+    }
+  );
+});
 
-/* =========== RUTAS IMPORTADAS =========== */
-// Importar y utilizar las rutas de productos
-// const productos = require("./routers/products/productos");
-// app.use("/productos", productos);// Rutas relacionadas con productos
+// ruta para eliminar productos
+app.get("/delete/:id_producto", (req, res) => {
+  const id_producto = req.params.id_producto;
+  conexion.query(
+    "DELETE FROM productos WHERE id_producto = ?",
+    [id_producto],
+    (error, results) => {
+      if (error) {
+        console.log("EL ERROR ES " + error);
+      } else {
+        res.redirect("/productos");
+      }
+    }
+  );
+});
 
 // metodos del crud alojados en la ruta mostrada para interactuar con el formulario
 const crud = require("./controllers/crudProductos");
 app.post("/save", crud.save);
+app.post("/update", crud.update);
+
+/* ============================================================== */
+/* ======================== FIN PRODUCTOS =========================== */
+/* ============================================================== */
 
 /* ========== RUTAS ========== */
 // ruta de login
@@ -152,16 +198,6 @@ app.get("/registro", (req, res) => {
   res.render("registro");
 });
 
-// ruta para los produtos
-app.get("/productos", (req, res) => {
-  res.render("productos");
-});
-
-// ruta para crear productos
-app.get("/newProduct", (req, res) => {
-  res.render("newProduct");
-});
-
 //logout
 app.get("/logout", (req, res) => {
   req.session.destroy(() => {
@@ -169,8 +205,7 @@ app.get("/logout", (req, res) => {
   });
 });
 
-/* ========================== */
-// SERVIDOR
+/* ========== SERVIDOR ========== */
 app.listen(3030, (req, res) => {
   console.log("Servidor corriendo http://127.0.0.1:3030");
 });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -11,13 +11,18 @@
   <!-- LINK Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+
+  <!-- JQUERY -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
   <!-- LINK boxicons -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <!-- LINK fontawesome -->
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta2/css/all.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
     crossorigin="anonymous">
-
   <title>Tabla productos</title>
 </head>
 
@@ -38,7 +43,7 @@
       <!-- LISTA DE MENÚ -->
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link" href="#">Features</a>
+          <a class="nav-link" href="/registro">Usuarios</a>
         </div>
       </div>
       <!-- Logout -->
@@ -60,6 +65,7 @@
     <table id="tabla-productos" class="table table-bordered table-striped text-center table-hover mt-4">
       <thead>
         <tr class="bg-primary text-white">
+          <th hidden="col" class="text-center"> ID</th> <!-- id_producto -->
           <th scope="col" class="text-center"> Supplier</th> <!-- proveedor -->
           <th scope="col" class="text-center"> Part number</th> <!-- num_part -->
           <th scope="col" class="text-center"> Product name</th> <!-- nom_prod -->
@@ -75,6 +81,9 @@
         <!-- 'productos se refiere a la tabla que se creó en la base de datos' -->
         <% results.forEach((productos)=> { %>
           <tr>
+            <td hidden="text-center">
+              <%= productos.id_producto %>
+            </td>
             <td class="text-center">
               <%= productos.proveedor %>
             </td>
@@ -95,9 +104,17 @@
             </td>
             <!-- BOTONES DE EDITAR Y ELIMINAR -->
             <td class="text-center">
-              <a href="/edit" class="btn btn-outline-warning"> Edit</a>
-              <a href="/delete" class="btn btn-outline-danger"> Delete</a>
+              <!-- editar  -->
+              <a href="/edit/<%= productos.id_producto %>" class="btn btn-outline-warning">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </a>
+
+              <!-- eliminar -->
+              <a onclick="confirmar('<%=productos.id_producto %>')" class="btn btn-outline-danger">
+                <i class="fa-duotone fa-trash"></i>
+              </a>
             </td>
+
           </tr>
 
           <% }) %>
@@ -110,6 +127,14 @@
   <!-- ============================================================== -->
   <!-- ======================== SCRIPTS ======================== -->
   <!-- ============================================================== -->
+  <!-- script jquery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+  <!-- scripts alojadas en la carpeta public/js -->
+  <script src="/recursos/js/productos.js"></script>
   <!-- script boxicons -->
   <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
   <!-- script Bootstrap -->
